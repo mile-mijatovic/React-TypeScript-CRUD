@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import PostService from "../services/Post.service";
 import IPostData from "../types/Post";
@@ -13,7 +13,13 @@ import { Button } from "semantic-ui-react";
 
 const Post: React.FC = () => {
   const { id } = useParams();
-  const [post, setPost] = React.useState<IPostData>();
+  const navigate = useNavigate();
+
+  const [post, setPost] = React.useState<IPostData>({
+    id: "",
+    title: "",
+    body: "",
+  });
   const [loading, setLoading] = React.useState<Boolean>(false);
   const [message, setMessage] = React.useState<any>({
     type: "error" || "success",
@@ -23,7 +29,7 @@ const Post: React.FC = () => {
   const fetchPostById = async (id: string) => {
     setLoading(true);
     try {
-      const response = await PostService.getPost(id as string);
+      const response = await PostService.getPost(id);
       setPost(response.data);
       setLoading(false);
     } catch (error) {
@@ -34,7 +40,7 @@ const Post: React.FC = () => {
   const deletePost = async () => {
     setLoading(true);
     try {
-      await PostService.deletePost(id as string);
+      await PostService.deletePost(post.id);
       setLoading(false);
       setMessage({ type: "success", text: "Post deleted successfully" });
     } catch (error) {
@@ -45,6 +51,10 @@ const Post: React.FC = () => {
       }
       setLoading(false);
     }
+  };
+
+  const navigateToEdit = () => {
+    navigate(`/posts/${id}/edit`, { state: post });
   };
 
   React.useEffect(() => {
@@ -63,7 +73,7 @@ const Post: React.FC = () => {
       <p>{post?.body}</p>
 
       <Button.Group>
-        <Button>Edit</Button>
+        <Button onClick={navigateToEdit}>Edit</Button>
         <Button.Or />
         <Button color="red" onClick={deletePost}>
           Delete

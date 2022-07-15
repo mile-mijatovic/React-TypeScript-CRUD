@@ -1,5 +1,5 @@
 export default interface IPostData {
-  id: number | null;
+  id: string;
   title: string;
   body: string;
 }
