@@ -22,7 +22,7 @@ export const createPost = (post: any) => API.post("/posts", post);
 export const updatePost = (post: any) => API.put(`/posts/${post.id}`, post);
 
 // Delete post
-export const deletePost = (id: number) => API.delete(`/posts/${id}`);
+export const deletePost = (id: string) => API.delete(`/posts/${id}`);
 
 const PostService = {
   getPosts,
